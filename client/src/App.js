@@ -43,7 +43,7 @@ function App() {
   // Event Handler for rendering disabled button
   const disableButton = (movie) => {
     const result = nominationList.some(nominee => nominee.imdbID === movie.imdbID)
-    console.log(`Result of disable = ${result}`)
+    return result
 
   }
 
