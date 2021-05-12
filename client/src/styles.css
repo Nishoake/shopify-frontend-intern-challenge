@@ -24,6 +24,7 @@ html {
   flex-direction: column;
   justify-self: flex-start;
   align-items: center;
+  margin: 10px;
 }
 
 h1 {

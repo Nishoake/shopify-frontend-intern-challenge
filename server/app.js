@@ -18,11 +18,11 @@ app.listen(port, () => {
 })
 
 // Routes
-app.get('/', async (request, response) => {
-  console.log(`The client is requesting an update on the Heroku App`)
+// app.get('/', async (request, response) => {
+//   console.log(`The client is requesting an update on the Heroku App`)
 
-  response.json('The Heroku App is working 👨🏾‍🍳')
-})
+//   response.json('The Heroku App is working 👨🏾‍🍳')
+// })
 
 app.get('/search/:query', async (request, response) => {
   console.log(`The client is querying the OMDB API`)
