@@ -20,7 +20,7 @@ function App() {
       fetchData()
     }
 
-  }, [query])
+  }, [query, nominationList])
 
   // Event Handler for search
   const search = (e) => {
@@ -28,16 +28,23 @@ function App() {
   }
 
   // Event Handler for Nominate button
-  const nominate = () => {
-    // do something
-    // pass the movie object as a parameter into the function
-    // then push the movie into the nominationList array
-    // render this array
-    // how to toggle the disabled attribute
-    // disabled={INSERT result of state function}
-    // the function should return true or false
-    // we need to check the search array against the nomination array
-    // array.includes returns a boolean value could possibly use this
+  const nominateMovie = (nominee) => {
+    const shortList = [...nominationList]
+    shortList.push(nominee)
+    setNominationList(shortList)
+  }
+
+  // Event Handler for Nominate button
+  const removeMovie = (nominee) => {
+    const shortList = nominationList.filter(movie => movie.imdbID !== nominee.imdbID)
+    setNominationList(shortList)
+  }
+
+  // Event Handler for rendering disabled button
+  const disableButton = (movie) => {
+    const result = nominationList.some(nominee => nominee.imdbID === movie.imdbID)
+    console.log(`Result of disable = ${result}`)
+
   }
 
   // Conditionally render when search results are available
@@ -61,7 +68,31 @@ function App() {
             {searchResults.map(r =>
               <li key={r.imdbID}>
                 {r.Title} ({r.Year}) 
-                <button type="button">Nominate</button>
+                <button 
+                  type="button" 
+                  // disabled={false}
+                  disabled={disableButton(r)}
+                  onClick={() => nominateMovie(r)}
+                >
+                  Nominate
+                </button>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div className="card">
+          <p>Nominees List"</p>
+          <ul>
+            {nominationList.map(n =>
+              <li key={n.imdbID}>
+                {n.Title} ({n.Year}) 
+                <button
+                  type="button"
+                  onClick={() => removeMovie(n)}
+                >
+                  Remove
+                </button>
               </li>
             )}
           </ul>

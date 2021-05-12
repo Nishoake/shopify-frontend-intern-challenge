@@ -14,7 +14,7 @@ app.use(express.static('build'))
 // Intialize port
 const port = process.env.PORT || 3006
 app.listen(port, () => {
-  console.log(`Gym Share app is currently listening at ${port}`)
+  console.log(`The Shoppies app is currently listening at ${port}`)
 })
 
 // Routes
