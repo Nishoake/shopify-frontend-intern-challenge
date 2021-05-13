@@ -4,10 +4,23 @@ import './styles.css'
 
 
 function App() {
+  // Local Storage Key
+  const LOCAL_STORAGE_KEY = "shoppies-list"
+
   // State Variables
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [nominationList, setNominationList] = useState([])
+
+  // Check the localStorage
+  useEffect(() => {
+    const check = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+    
+    console.log(`check = ${JSON.stringify(check)}`)
+    if (check){
+      setNominationList(check)
+    }
+  }, [])
 
   // Fetch movie results with useEffect hook
   useEffect(() => {
@@ -21,6 +34,11 @@ function App() {
     }
 
   }, [query, nominationList])
+
+  // Persist nominationList changes to localStorage
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nominationList))
+  }, [nominationList])
 
   // Event Handler for search
   const search = (e) => {
@@ -42,9 +60,8 @@ function App() {
 
   // Event Handler for rendering disabled button
   const disableButton = (movie) => {
-    const result = nominationList.some(nominee => nominee.imdbID === movie.imdbID)
+    const result = (nominationList.some(nominee => nominee.imdbID === movie.imdbID) || nominationList.length === 5)
     return result
-
   }
 
   // Conditionally render when search results are available
@@ -82,7 +99,7 @@ function App() {
         </div>
 
         <div className="card">
-          <p>Nominees List"</p>
+          <p>Nominees List</p>
           <ul>
             {nominationList.map(n =>
               <li key={n.imdbID}>
