@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import newQuery from './services/newQuery'
+import Notification from './components/Notification'
 import './styles.css'
 
 
 function App() {
-  // Local Storage Key
+  // Local Storage Key for the nominationList array
   const LOCAL_STORAGE_KEY = "shoppies-list"
 
   // State Variables
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [nominationList, setNominationList] = useState([])
+  const [completedList, setCompletedList] = useState(false)
 
-  // Check the localStorage
+  // Check the localStorage for an existing nominationList
   useEffect(() => {
     const check = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
     
@@ -35,9 +37,17 @@ function App() {
 
   }, [query, nominationList])
 
-  // Persist nominationList changes to localStorage
+  // Persist nominationList changes to localStorage and toggle completion notification/banner
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nominationList))
+
+    if(nominationList.length === 5){
+      setCompletedList(true)
+
+      setTimeout(() => {
+        setCompletedList(false)
+      }, 3000)
+    }
   }, [nominationList])
 
   // Event Handler for search
@@ -71,6 +81,7 @@ function App() {
         <h1>
           The Shoppies
         </h1>
+        <Notification completedList={completedList}/>
 
         <div className="card">
           <p>Movie Title</p>
