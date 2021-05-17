@@ -25,16 +25,21 @@ app.listen(port, () => {
 // })
 
 app.get('/search/:query', async (request, response) => {
-  console.log(`The client is querying the OMDB API`)
+  try {
+    // Parsing the route parameters
+    const body = await request.params.query
 
-  const body = await request.params.query
-  console.log(`Request = ${JSON.stringify(body)}`)
+    // Defining the GET request API
+    const endpoint = `http://www.omdbapi.com/?apikey=${process.env.API_KEY}&s=${body}`
+
+    // Performing the GET request
+    const result = await axios.get(endpoint)
+
+    // Sending back a successful response
+    response.send(result.data.Search)
+
+  } catch(err) {
+    console.log(`Error from OMDB API: ${err}`)
+  }
   
-  const endpoint = `http://www.omdbapi.com/?apikey=${process.env.API_KEY}&s=${body}`
-
-  const result = await axios.get(endpoint)
-  // console.log(`Result = ${JSON.stringify(result.data.Search)}`)
-
-
-  response.send(result.data.Search)
 })
