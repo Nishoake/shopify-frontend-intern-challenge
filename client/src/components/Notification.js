@@ -6,7 +6,7 @@ const Notification = ({ completedList }) => {
   }
   return (
     <div className="notification">
-      <h1>Completed List 🎊</h1>
+      <h1>Completed List <span role="img" aria-label="confetti">🎊</span></h1>
     </div>
   )
 

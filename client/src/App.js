@@ -8,17 +8,20 @@ function App() {
   // Local Storage Key for the nominationList array
   const LOCAL_STORAGE_KEY = "shoppies-list"
 
+
   // State Variables
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [searchError, setSearchError] = useState('')
   const [nominationList, setNominationList] = useState([])
   const [completedList, setCompletedList] = useState(false)
 
+
+  // useEffect Hooks
   // Check the localStorage for an existing nominationList
   useEffect(() => {
     const check = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
     
-    console.log(`check = ${JSON.stringify(check)}`)
     if (check){
       setNominationList(check)
     }
@@ -29,17 +32,19 @@ function App() {
     async function fetchData() {
       const response = await newQuery.searchQuery(query)
 
-      if(response){
-        return setSearchResults(response)
-      }
-      
-      return setSearchResults([])
+      // When API responds with search results
+      if (response.Response === "True"){
+        setSearchResults(response.Search)
+        setSearchError(null)
+        return
+      } 
+      // Else provide user with an insightful error message
+      setSearchResults([])
+      setSearchError(response.Error)
     }
-
     if(query !== ""){
       fetchData()
     }
-
   }, [query, nominationList])
 
   // Persist nominationList changes to localStorage and toggle completion notification/banner
@@ -55,6 +60,8 @@ function App() {
     }
   }, [nominationList])
 
+
+  // Event Handlers
   // Event Handler for search
   const search = (e) => {
     setQuery(e.target.value)
@@ -79,83 +86,64 @@ function App() {
     return result
   }
 
-  // Conditionally render when search results are available
-  // if (searchResults){
-    return (
-      <div className="flex">
-        <h1>
-          The Shoppies
-        </h1>
-        <Notification completedList={completedList}/>
 
-        <div className="card">
-          <p>Movie Title</p>
-          <form>
-            <input type="text" value={query} onChange={search}></input>
-          </form>
-        </div>
+  // Render
+  return (
+    <div className="flex">
+      <h1>
+        The Shoppies
+      </h1>
+      <Notification completedList={completedList}/>
 
-        <div className="card">
-          <p>Results for "{query}"</p>
-          <ul>
-            {searchResults.map(r =>
-              <li key={r.imdbID}>
-                {r.Title} ({r.Year}) 
-                <button 
-                  type="button" 
-                  // disabled={false}
-                  disabled={disableButton(r)}
-                  onClick={() => nominateMovie(r)}
-                >
-                  Nominate
-                </button>
-              </li>
-            )}
-          </ul>
-        </div>
-
-        <div className="card">
-          <p>Nominees List</p>
-          <ul>
-            {nominationList.map(n =>
-              <li key={n.imdbID}>
-                {n.Title} ({n.Year}) 
-                <button
-                  type="button"
-                  onClick={() => removeMovie(n)}
-                >
-                  Remove
-                </button>
-              </li>
-            )}
-          </ul>
-        </div>
-
+      <div className="card">
+        <p>Movie Title</p>
+        <form>
+          <input type="text" value={query} onChange={search}></input>
+        </form>
       </div>
-    )
-  // } 
-  // else {
-  //   return (
-  //     <div className="flex">
-  //       <h1>
-  //         The Shoppies
-  //     </h1>
 
-  //       <div className="card">
-  //         <p>Movie Title</p>
-  //         <form>
-  //           <input type="text" value={query} onChange={search}></input>
-  //         </form>
-  //       </div>
+      <div className="card">
+        
+        {searchError ?
+          <p>Please refine your search parameters: {searchError}</p>
+          : <p>Results for "{query}"</p>
+        }
+        <ul>
+          {searchResults.map(r =>
+            <li key={r.imdbID}>
+              {r.Title} ({r.Year}) 
+              <button 
+                type="button" 
+                // disabled={false}
+                disabled={disableButton(r)}
+                onClick={() => nominateMovie(r)}
+              >
+                Nominate
+              </button>
+            </li>
+          )}
+        </ul>
+      </div>
 
-  //       <div className="card">
-  //         <p>Results for "{query}"</p>
-  //       </div>
+      <div className="card">
+        <p>Nominees List</p>
+        <ul>
+          {nominationList.map(n =>
+            <li key={n.imdbID}>
+              {n.Title} ({n.Year}) 
+              <button
+                type="button"
+                onClick={() => removeMovie(n)}
+              >
+                Remove
+              </button>
+            </li>
+          )}
+        </ul>
+      </div>
 
-  //     </div>
-  //   )
-  // }
-  
+    </div>
+  )
 }
 
 export default App
