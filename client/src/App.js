@@ -28,10 +28,15 @@ function App() {
   useEffect(() => {
     async function fetchData() {
       const response = await newQuery.searchQuery(query)
-      setSearchResults(response)
+
+      if(response){
+        return setSearchResults(response)
+      }
+      
+      return setSearchResults([])
     }
 
-    if(query !== ''){
+    if(query !== ""){
       fetchData()
     }
 
@@ -75,7 +80,7 @@ function App() {
   }
 
   // Conditionally render when search results are available
-  if (searchResults){
+  // if (searchResults){
     return (
       <div className="flex">
         <h1>
@@ -128,27 +133,28 @@ function App() {
 
       </div>
     )
-  } else {
-    return (
-      <div className="flex">
-        <h1>
-          The Shoppies
-      </h1>
+  // } 
+  // else {
+  //   return (
+  //     <div className="flex">
+  //       <h1>
+  //         The Shoppies
+  //     </h1>
 
-        <div className="card">
-          <p>Movie Title</p>
-          <form>
-            <input type="text" value={query} onChange={search}></input>
-          </form>
-        </div>
+  //       <div className="card">
+  //         <p>Movie Title</p>
+  //         <form>
+  //           <input type="text" value={query} onChange={search}></input>
+  //         </form>
+  //       </div>
 
-        <div className="card">
-          <p>Results for "{query}"</p>
-        </div>
+  //       <div className="card">
+  //         <p>Results for "{query}"</p>
+  //       </div>
 
-      </div>
-    )
-  }
+  //     </div>
+  //   )
+  // }
   
 }
 

@@ -18,12 +18,6 @@ app.listen(port, () => {
 })
 
 // Routes
-// app.get('/', async (request, response) => {
-//   console.log(`The client is requesting an update on the Heroku App`)
-
-//   response.json('The Heroku App is working 👨🏾‍🍳')
-// })
-
 app.get('/search/:query', async (request, response) => {
   try {
     // Parsing the route parameters
@@ -36,10 +30,9 @@ app.get('/search/:query', async (request, response) => {
     const result = await axios.get(endpoint)
 
     // Sending back a successful response
-    response.send(result.data.Search)
+    response.send(result.data)
 
-  } catch(err) {
-    console.log(`Error from OMDB API: ${err}`)
+  } catch (error) {
+    console.log(`WARNING: ${error}`)
   }
-  
 })
