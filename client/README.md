@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# The Shoppies React Client
 
 This directory houses all files associated with the client of The Shoppies App.
 
